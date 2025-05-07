@@ -3,6 +3,9 @@ public class GameMove {
     private final Language language;
     private final int points;
 
+    /**
+    * represents a single move in the game
+     */
     public GameMove(Country country, Language language, int points) {
         this.country = country;
         this.language = language;

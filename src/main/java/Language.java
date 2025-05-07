@@ -19,17 +19,11 @@ public class Language {
         this.rarityScore = rarityScore;
     }
 
-    /**
-     * getter method
-     * @return the language name
-     */
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the rarity score used in scoring calculations
-     */
     public int getRarityScore() {
         return rarityScore;
     }

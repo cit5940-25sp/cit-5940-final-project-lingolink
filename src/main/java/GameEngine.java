@@ -3,7 +3,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Main game engine that implements the game rules and logic
+ * Main game engine that implements the game rules and logic.
+ * Uses a singleton pattern, manages game difficulty, and coordinates moves.
  */
 public class GameEngine {
     // Using Singleton pattern for the game engine
@@ -14,11 +15,23 @@ public class GameEngine {
 
     private GameState gameState;
     private boolean hardMode = false;
+    /**
+     * Private constructor to initialize the game engine with a data service.
+     * Resets the game to a random starting country.
+     *
+     * @param dataService the CountryLanguageManager providing country and language data
+     */
     private GameEngine(CountryLanguageManager dataService) {
         this.dataService = dataService;
         resetGame();
     }
 
+    /**
+     * Returns the singleton instance of GameEngine, creating it if necessary.
+     *
+     * @param dataService the CountryLanguageManager to use on first invocation
+     * @return the single shared GameEngine instance
+     */
     public static synchronized GameEngine getInstance(CountryLanguageManager dataService) {
         if (instance == null) {
             instance = new GameEngine(dataService);
@@ -29,8 +42,9 @@ public class GameEngine {
 
 
     /**
-     * reset the game with a random starting country
-     * @param random
+     * Resets the game state using the provided Random for country selection.
+     *
+     * @param random the Random instance used to pick the starting country
      */
     public void resetGame(Random random) {
         List<Country> allCountries = new ArrayList<>(dataService.getAllCountries());
@@ -39,20 +53,41 @@ public class GameEngine {
         notifyObservers();
     }
 
+    /**
+     * Resets the game state with a new Random instance.
+     * Delegates to resetGame(Random).
+     */
     public void resetGame() {
         Random random = new Random();
         resetGame(random);
     }
 
+    /**
+     * Enables or disables hard mode, adjusting language usage limits.
+     *
+     * @param hardMode true to use hard mode limits, false for normal limits
+     */
     public void setHardMode(boolean hardMode) {
 
         this.hardMode = hardMode;
     }
 
+    /**
+     * Indicates whether the game is in hard mode.
+     *
+     * @return true if hard mode is active, false otherwise
+     */
     public boolean isHardMode() {
         return hardMode;
     }
 
+    /**
+     * Selects a language for the current streak and enforces usage limits.
+     * Resets the streak if a new language is chosen.
+     *
+     * @param language the Language to select
+     * @return true if the language was accepted, false if it exceeded its limit
+     */
     public boolean setSelectedLanguage(Language language) {
 
         int languageLimit;
@@ -79,6 +114,12 @@ public class GameEngine {
         return true;
     }
 
+    /**
+     * Attempts to move to a new country by name, validating existence, usage, and language.
+     *
+     * @param countryName the (case-insensitive) name of the target country
+     * @return a MoveResult indicating success or failure and any messages
+     */
     public MoveResult moveToCountry(String countryName) {
         Country country = dataService.getCountry(countryName.toLowerCase());
 
@@ -122,7 +163,9 @@ public class GameEngine {
     }
 
     /**
-     * Adds an observer to receive game state updates
+     * Registers an observer to receive updates when the game state changes.
+     *
+     * @param observer the IGameObserver to notify on state changes
      */
     public void addObserver(IGameObserver observer) {
         observers.add(observer);
@@ -138,7 +181,7 @@ public class GameEngine {
     }
 
     /**
-     * Returns the current game state
+     * @return the GameState object representing the session’s current status
      */
     public GameState getGameState() {
         return gameState;

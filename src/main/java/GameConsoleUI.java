@@ -3,6 +3,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+handles user interaction, parses inputs, and displays the current game state
+ */
 public class GameConsoleUI implements IGameObserver {
     private final GameEngine gameEngine;
     private final Scanner scanner;
@@ -98,6 +101,12 @@ public class GameConsoleUI implements IGameObserver {
         System.out.println("Thanks for playing!");
     }
 
+    /**
+     * Callback invoked when the game state changes.
+     * Displays updated state information including current country, mode, streak, and score.
+     *
+     * @param gameState the updated GameState to display
+     */
     @Override
     public void onGameStateChanged(GameState gameState) {
         System.out.println("\n--- Game State ---");

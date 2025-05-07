@@ -21,10 +21,7 @@ public class Country {
         this.languages = Set.copyOf(languages);
     }
 
-    /**
-     * getter method
-     * @return the country's name
-     */
+
     public String getName() {
         return name;
     }
